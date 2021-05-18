@@ -1,7 +1,7 @@
 // @TODO: YOUR CODE HERE!
 // Chart Params
-var svgWidth = 960;
-var svgHeight = 500;
+var svgWidth = 1000;
+var svgHeight = 1000;
 
 var margin = { top: 20, right: 40, bottom: 60, left: 50 };
 
@@ -72,11 +72,22 @@ d3.csv("assets/data/data.csv").then(function(data) {
     .append("circle")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", "5")
-    .attr("fill", "red");
-    
+    .attr("r", "15")
+    .attr("fill", "red")
+    .attr("stroke", "black");
 
-// Step 1: Initialize Tooltip
+// append text to data points
+var textGroup = chartGroup.append("text")
+  .style("text-anchor", "middle")
+  .selectAll("tspan")
+  .data(data)
+  .enter()
+  .append("tspan")
+    .text(d => d.abbr)
+    .attr("x", d => xLinearScale(d.poverty))
+    .attr("y", d => yLinearScale(d.healthcare)+4);
+    
+// Initialize Tooltip
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
@@ -85,16 +96,16 @@ d3.csv("assets/data/data.csv").then(function(data) {
       %`);
     });
 
-      // Step 2: Create the tooltip in chartGroup.
+// Create the tooltip in chartGroup.
   chartGroup.call(toolTip);
 
-      // Step 3: Create "mouseover" event listener to display tooltip
-  circlesGroup.on("mouseover", function(d) {
+// Create "mouseover" event listener to display tooltip
+  textGroup.on("mouseover", function(d) {
     toolTip.show(d, this);
   })
-      // Step 4: Create "mouseout" event listener to hide tooltip
+
+// Create "mouseout" event listener to hide tooltip
   .on("mouseout", function(d) {
     toolTip.hide(d);
   });
-
 });
